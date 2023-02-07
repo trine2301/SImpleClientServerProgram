@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-//import utils.ResponseGenerator;
+import utils.ResponseGenerator;
 
 public class SearchSimulator {
     public static void processClientRequest() throws Exception {
