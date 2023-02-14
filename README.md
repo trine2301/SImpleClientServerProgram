@@ -18,6 +18,14 @@ but since I haven´t completed the assignment yet I will come back to this later
 Problems encountered so far: 
 - Code will not go into the try/catch where server should accept connection. 
 
+## Remaining work
+Make this code work: 
+![img_2.png](img_2.png)
+
+And then do this:
+![img_1.png](img_1.png)
+
+
 
 
 ## Authors
