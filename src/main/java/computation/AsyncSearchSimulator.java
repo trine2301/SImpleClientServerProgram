@@ -1,15 +1,18 @@
 package computation;
 
-/**
- * @author Trine Merete Staverløkk
- * @version 0.1
- */
-public class AsyncSearchSimulator {
+import java.net.Socket;
 
-  /**
-   * Makes an instance of the AsyncSearchSimulator class.
-   */
-  public AsyncSearchSimulator() {
+public class AsyncSearchSimulator implements Runnable {
+
+  protected Socket clientSocket;
+  protected String serverText;
+
+  public AsyncSearchSimulator(Socket clientSocket, String serverText) {
+    this.clientSocket = clientSocket;
+    this.serverText = serverText;
+  }
+
+  public void run() {
 
   }
 }

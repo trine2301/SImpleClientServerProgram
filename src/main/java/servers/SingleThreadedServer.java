@@ -1,42 +1,65 @@
 package servers;
 
-/**
- * @author Trine Merete Staverløkk
- * @version 0.1
- */
-public class SingleThreadedServer {
+import computation.SearchSimulator;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-  /**
-   * Makes an instance of the SingleThreadedServer class.
-   */
-  public SingleThreadedServer() {
+public class SingleThreadedServer implements Runnable {
 
+  protected int serverPort;
+  protected ServerSocket serverSocket;
+  protected boolean isStopped = false;
+
+
+  public SingleThreadedServer(int port) throws IOException {
+    this.serverPort = port;
+    //this.serverSocket = new ServerSocket(serverPort);
   }
 
-  /**
-   * Checks if a string is of a valid format or not.
-   *
-   * @param stringToCheck the string you want to check.
-   * @param errorPrefix   the error the exception should have if the string is invalid.
-   * @throws IllegalArgumentException gets thrown if the string to check is empty or null.
-   */
-  private void checkString(String stringToCheck, String errorPrefix) {
-    checkIfObjectIsNull(stringToCheck, errorPrefix);
-    if (stringToCheck.isEmpty()) {
-      throw new IllegalArgumentException("The " + errorPrefix + " cannot be empty.");
+  public void run() {
+    try {
+      openServerSocket();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    while (!isStopped()) {
+      // wait for a connection
+      // on receiving a request, execute the heavy computation
+      System.out.println("Waiting for client");
+      try {
+        Socket client = serverSocket.accept();
+        System.out.println("Client accepted");
+        SearchSimulator.processClientRequest();
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
     }
   }
 
-  /**
-   * Checks if an object is null.
-   *
-   * @param object the object you want to check.
-   * @param error  the error message the exception should have.
-   * @throws IllegalArgumentException gets thrown if the object is null.
-   */
-  private void checkIfObjectIsNull(Object object, String error) {
-    if (object == null) {
-      throw new IllegalArgumentException("The " + error + " cannot be null.");
+  private synchronized boolean isStopped() {
+    return this.isStopped;
+  }
+
+  public synchronized void stop() {
+    // implementation to stop the server from the main thread if needed
+    try {
+      serverSocket.close();
+      System.out.println("Stopped");
+    } catch (IOException exception) {
+      exception.printStackTrace();
+      System.out.println("Error trying to close socket");
     }
+    isStopped = true;
+  }
+
+  private void openServerSocket() throws IOException {
+    // open server socket here
+    this.serverSocket = new ServerSocket(serverPort);
+    System.out.println("Server started");
   }
 }

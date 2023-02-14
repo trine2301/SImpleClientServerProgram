@@ -1,10 +1,11 @@
+/**
+ * Represents the search simulator.
+ */
+
 package computation;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 
-import utils.ResponseGenerator;
+import servers.SingleThreadedServer;
 
 public class SearchSimulator {
     public static void processClientRequest() throws Exception {
@@ -13,5 +14,8 @@ public class SearchSimulator {
         Thread.sleep(10 * 1000);
         long time2 = System.currentTimeMillis();
         System.out.println("Request processing ended at: " + time2);
+
+        //SingleThreadedServer.run();
+
     }
 }
