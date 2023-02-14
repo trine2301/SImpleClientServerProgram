@@ -14,4 +14,5 @@ public class ResponseGenerator {
         "Content-Length: " + contentLength +
         "\r\n\r\n");
   }
+
 }

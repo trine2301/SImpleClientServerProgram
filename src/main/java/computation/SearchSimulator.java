@@ -6,6 +6,7 @@ package computation;
 
 
 import servers.SingleThreadedServer;
+import utils.ResponseGenerator;
 
 public class SearchSimulator {
     public static void processClientRequest() throws Exception {
@@ -15,7 +16,7 @@ public class SearchSimulator {
         long time2 = System.currentTimeMillis();
         System.out.println("Request processing ended at: " + time2);
 
-        //SingleThreadedServer.run();
+        ResponseGenerator.generatorResponseHTML(time1, time2);
 
     }
 }

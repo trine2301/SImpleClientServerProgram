@@ -17,6 +17,10 @@ public class SingleThreadedServer implements Runnable {
     //this.serverSocket = new ServerSocket(serverPort);
   }
 
+  public SingleThreadedServer() {
+
+  }
+
   public void run() {
     try {
       openServerSocket();
@@ -29,15 +33,15 @@ public class SingleThreadedServer implements Runnable {
       // on receiving a request, execute the heavy computation
       System.out.println("Waiting for client");
       try {
-        Socket client = serverSocket.accept();
-        System.out.println("Client accepted");
+        Socket socket = serverSocket.accept();
+        System.out.println("Accepted");
         SearchSimulator.processClientRequest();
       } catch (IOException e) {
         e.printStackTrace();
       } catch (Exception e) {
         e.printStackTrace();
+        System.out.println("Error trying to open socket");
       }
-
     }
   }
 
