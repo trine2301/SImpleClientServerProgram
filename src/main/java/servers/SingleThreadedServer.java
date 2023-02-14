@@ -50,6 +50,7 @@ public class SingleThreadedServer implements Runnable {
     try {
       serverSocket.close();
       System.out.println("Stopped");
+
     } catch (IOException exception) {
       exception.printStackTrace();
       System.out.println("Error trying to close socket");
