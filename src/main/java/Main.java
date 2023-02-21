@@ -1,6 +1,7 @@
 import computation.SearchSimulator;
 import java.io.IOException;
 
+import servers.MultiThreadedServer;
 import servers.SingleThreadedServer;
 
 /**
@@ -14,6 +15,10 @@ class Main {
     SingleThreadedServer singleThreadedServer = new SingleThreadedServer();
     singleThreadedServer.run();
     singleThreadedServer.stop();
+
+//    MultiThreadedServer multiThreadedServer = new MultiThreadedServer();
+//    multiThreadedServer.run();
+//    multiThreadedServer.stop();
 
     try {
       SearchSimulator.processClientRequest();

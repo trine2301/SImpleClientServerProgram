@@ -15,7 +15,7 @@ public class SearchSimulator {
         long time2 = System.currentTimeMillis();
         System.out.println("Request processing ended at: " + time2);
 
-        ResponseGenerator.generatorResponseHTML(time1, time2);
+        System.out.println(ResponseGenerator.generatorResponseHTML(time1, time2));
 
     }
 }

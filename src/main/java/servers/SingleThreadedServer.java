@@ -3,18 +3,17 @@ package servers;
 import computation.SearchSimulator;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class SingleThreadedServer implements Runnable {
 
   protected int serverPort;
-  protected ServerSocket serverSocket;
+  protected ServerSocket socket;
   protected boolean isStopped = false;
 
 
   public SingleThreadedServer(int port) throws IOException {
     this.serverPort = port;
-    //this.serverSocket = new ServerSocket(serverPort);
+    this.socket = new ServerSocket(serverPort);
   }
 
   public SingleThreadedServer() {
@@ -33,9 +32,9 @@ public class SingleThreadedServer implements Runnable {
       // on receiving a request, execute the heavy computation
       System.out.println("Waiting for client");
       try {
-        Socket socket = serverSocket.accept();
         System.out.println("Accepted");
         SearchSimulator.processClientRequest();
+        socket.accept();
       } catch (IOException e) {
         e.printStackTrace();
       } catch (Exception e) {
@@ -52,7 +51,7 @@ public class SingleThreadedServer implements Runnable {
   public synchronized void stop() {
     // implementation to stop the server from the main thread if needed
     try {
-      serverSocket.close();
+      socket.close();
       System.out.println("Stopped");
 
     } catch (IOException exception) {
@@ -64,7 +63,7 @@ public class SingleThreadedServer implements Runnable {
 
   private void openServerSocket() throws IOException {
     // open server socket here
-    this.serverSocket = new ServerSocket(serverPort);
+    this.socket = new ServerSocket(serverPort);
     System.out.println("Server started");
   }
 }

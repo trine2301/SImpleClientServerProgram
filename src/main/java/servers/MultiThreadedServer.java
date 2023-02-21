@@ -33,8 +33,8 @@ public class MultiThreadedServer implements Runnable {
             // on receiving a request, execute the heavy computation
             System.out.println("Waiting for client");
             try {
-                Socket socket = serverSocket.accept();
                 System.out.println("Accepted");
+                serverSocket.accept();
                 SearchSimulator.processClientRequest();
             } catch (IOException e) {
                 e.printStackTrace();
