@@ -1,48 +1,54 @@
 package servers;
 
-import computation.SearchSimulator;
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import computation.AsyncSearchSimulator;
+
+import java.io.IOException;
+
 public class MultiThreadedServer implements Runnable {
 
-    protected int serverPort;
-    protected ServerSocket serverSocket;
+    protected int serverPort = 8080;
+    protected ServerSocket serverSocket = null;
     protected boolean isStopped = false;
+    protected Thread runningThread = null;
 
-
-    public MultiThreadedServer(int port) throws IOException {
+    public MultiThreadedServer(int port) {
         this.serverPort = port;
-        //this.serverSocket = new ServerSocket(serverPort);
-    }
-
-    public MultiThreadedServer() {
-
     }
 
     public void run() {
-        try {
-            openServerSocket();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // lock
+        synchronized (this) {
+            this.runningThread = Thread.currentThread();
         }
+        openServerSocket();
 
         while (!isStopped()) {
-            // wait for a connection
-            // on receiving a request, execute the heavy computation
-            System.out.println("Waiting for client");
+            Socket clientSocket;
             try {
-                Socket socket = serverSocket.accept();
-                System.out.println("Accepted");
-                SearchSimulator.processClientRequest();
+                // wait for a client to connect
+                System.out.println("Listening for connection.");
+                clientSocket = this.serverSocket.accept();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Error trying to open socket");
+                if (isStopped()) {
+                    System.out.println("Server Stopped.");
+                    return;
+                }
+                throw new RuntimeException(
+                    "Error accepting client connection", e);
             }
+
+            new Thread(
+                new AsyncSearchSimulator(
+                    clientSocket, "Multithreaded Server"))
+                .start();
+
         }
+
+        stop();
+        System.out.println("Server Stopped.");
     }
 
     private synchronized boolean isStopped() {
@@ -50,21 +56,19 @@ public class MultiThreadedServer implements Runnable {
     }
 
     public synchronized void stop() {
-        // implementation to stop the server from the main thread if needed
+        this.isStopped = true;
         try {
-            serverSocket.close();
-            System.out.println("Stopped");
-
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            System.out.println("Error trying to close socket");
+            this.serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error closing server", e);
         }
-        isStopped = true;
     }
 
-    private void openServerSocket() throws IOException {
-        // open server socket here
-        this.serverSocket = new ServerSocket(serverPort);
-        System.out.println("Server started");
+    private void openServerSocket() {
+        try {
+            this.serverSocket = new ServerSocket(this.serverPort);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot open port 8080", e);
+        }
     }
 }
